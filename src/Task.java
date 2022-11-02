@@ -1,8 +1,12 @@
 public class Task {
     protected String title;
     protected String description;
-    protected Integer id;
-    protected String status;
+    protected final Integer id;
+    protected Statuses status;
+
+    public Task(Integer id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -24,14 +28,17 @@ public class Task {
         return id;
     }
 
-    public String getStatus() {
+    public Statuses getStatus() {
         return status;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public void setStatus(String status) {
+    public void setStatus(Statuses status) {
         this.status = status;
+    }
+
+    public String toString() {
+        String taskString = "";
+        taskString = taskString + title + "\n" + description + "\n" + id + "\n" + status;
+        return taskString;
     }
 }

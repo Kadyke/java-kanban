@@ -1,39 +1,32 @@
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 
-public class TasksManager {
-    public static HashMap<Integer, Task> tasks = new HashMap<>();
-    public static HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    public static HashMap<Integer, Epic> epics = new HashMap<>();
+public class InMemoryTaskManager implements TaskManager {
+
     Integer id = 0;
 
     public Task createTask(String title, String description) {
-        Task task = new Task();
+        Task task = new Task(++id);
         task.setTitle(title);
         task.setDescription(description);
-        task.setStatus("NEW");
-        task.setId(++id);
+        task.setStatus(Statuses.NEW);
         return task;
     }
 
     public Subtask createSubTask(String title, String description, Epic epic) {
-        Subtask subtask = new Subtask();
+        Subtask subtask = new Subtask(++id);
         subtask.setTitle(title);
         subtask.setDescription(description);
-        subtask.setStatus("NEW");
-        subtask.setId(++id);
+        subtask.setStatus(Statuses.NEW);
         subtask.setIdEpic(epic.id);
         epic.subtasksId.add(id);
         return subtask;
     }
 
     public Epic createEpic(String title, String description) {
-        Epic epic = new Epic();
+        Epic epic = new Epic(++id);
         epic.setTitle(title);
         epic.setDescription(description);
-        epic.setStatus("NEW");
-        epic.setId(++id);
+        epic.setStatus(Statuses.NEW);
         return epic;
     }
 
@@ -71,14 +64,17 @@ public class TasksManager {
     }
 
     public Task getTask(Integer id) {
-       return tasks.get(id);
+        InMemoryHistoryManager.history.add(tasks.get(id));
+        return tasks.get(id);
     }
 
     public Subtask getSubtask(Integer id) {
+        InMemoryHistoryManager.history.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
     public Epic getEpic(Integer id) {
+        InMemoryHistoryManager.history.add(epics.get(id));
         return epics.get(id);
     }
 
@@ -100,7 +96,7 @@ public class TasksManager {
         epic.setStatus();
     }
 
-    public void updateTask (Task task, String title, String description, String status) {
+    public void updateTask(Task task, String title, String description, Statuses status) {
         task.setTitle(title);
         task.setDescription(description);
         task.setStatus(status);
@@ -111,7 +107,7 @@ public class TasksManager {
         epic.setDescription(description);
     }
 
-    public void updateSubtask (Subtask subtask, String title, String description, String status) {
+    public void updateSubtask (Subtask subtask, String title, String description, Statuses status) {
         subtask.setTitle(title);
         subtask.setDescription(description);
         subtask.setStatus(status);

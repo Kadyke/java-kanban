@@ -3,7 +3,6 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Тестирование версии 1.1");
         TaskManager taskManager = Managers.getDefault();
-        HistoryManager historyManager = Managers.getDefaultHistory();
         Task task1 = taskManager.createTask("Задача 1", "Описаиние задачи 1");
         System.out.println("Создали задачу 1");
         taskManager.tasks.put(task1.getId(), task1);
@@ -46,7 +45,7 @@ public class Main {
         taskManager.subtasks.put(subtask1.getId(), subtask1);
         System.out.println(taskManager.getSubtask(subtask1.getId()));
         System.out.println("Сохранили подзадачу 1");
-        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.historyManager.getHistory());
         System.out.println("Получили историю задач");
         Subtask subtask2 = taskManager.createSubTask("Подзадача 2",
                 "Описание подзадачи 2", epic1);
@@ -91,7 +90,7 @@ public class Main {
         System.out.println("Получили список всех эпиков");
         System.out.println(taskManager.getAllSubtasks());
         System.out.println("Получили список всех подзадач");
-        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.historyManager.getHistory());
         System.out.println("Получили историю задач");
         System.out.println("Тестирование успешно завершенно!");
     }

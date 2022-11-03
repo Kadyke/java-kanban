@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface TaskManager {
-
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Subtask> subtasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     Task createTask(String title, String description);
 

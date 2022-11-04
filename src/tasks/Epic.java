@@ -1,6 +1,6 @@
-package Tasks;
+package tasks;
 
-import Managers.InMemoryTaskManager;
+import managers.InMemoryTaskManager;
 import java.util.ArrayList;
 import java.util.Objects;
 

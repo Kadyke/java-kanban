@@ -1,8 +1,11 @@
+package Tasks;
+
+import Managers.InMemoryTaskManager;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtasksId = new ArrayList<>();
+    public ArrayList<Integer> subtasksId = new ArrayList<>();
 
     public Epic(Integer id){
         super(id);

@@ -9,18 +9,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         history.add(task);
     }
+
+    @Override
+    public void remove(Integer integer) {
+        history.remove(integer);
+    }
     @Override
     public ArrayList<String> getHistory() {
-        ArrayList<String> last10 = new ArrayList<>();
-        if (history.size() < SIZE_OF_MEMORY) {
-            for (Task task : history) {
-                last10.add(task.getTitle());
-            }
-        } else {
-            for (int i = (history.size() - SIZE_OF_MEMORY); i < history.size() ; i++) {
-                last10.add(history.get(i).getTitle());
-            }
-        }
-        return last10;
+        return history.getTasks();
     }
 }

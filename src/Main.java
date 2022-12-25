@@ -4,7 +4,7 @@ import managers.*;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Тестирование версии 1.1");
+        System.out.println("Тестирование версии 1.2");
         TaskManager taskManager = Managers.getDefault();
         Task task1 = taskManager.createTask("Задача 1", "Описаиние задачи 1");
         System.out.println("Создали задачу 1");

@@ -4,10 +4,11 @@ import tasks.Task;
 import java.util.ArrayList;
 
 public interface HistoryManager {
-    Integer SIZE_OF_MEMORY = 10;
-    ArrayList<Task> history = new ArrayList<>();
+    CustomLinkedList history = new CustomLinkedList();
 
     void add(Task task);
+
+    void remove(Integer integer);
 
     ArrayList<String> getHistory();
 

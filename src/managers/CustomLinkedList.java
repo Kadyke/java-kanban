@@ -45,6 +45,19 @@ public class CustomLinkedList {
         }
     }
 
+    public ArrayList<String> getIdTasks() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        if (hashMap.isEmpty()) {
+            return arrayList;
+        }
+        Node localTail = tail;
+        arrayList.add(localTail.getId().toString());
+        while (localTail.next != null) {
+            arrayList.add(localTail.next.getId().toString());
+            localTail = localTail.next;
+        }
+        return arrayList;
+    }
     public ArrayList<String> getTasks() {
         ArrayList<String> arrayList = new ArrayList<>();
         if (hashMap.isEmpty()) {

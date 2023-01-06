@@ -39,8 +39,6 @@ public class Task {
     }
 
     public String toString() {
-        String taskString = "";
-        taskString = taskString + title + "\n" + description + "\n" + id + "\n" + status;
-        return taskString;
+        return title + "\n" + description + "\n" + id + "\n" + status;
     }
 }

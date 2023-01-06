@@ -1,0 +1,11 @@
+Tasks
+title,description,id,status
+Задача 1,Описаиние задачи 1,1,NEW
+Задача 2,Описаиние задачи 2,5,NEW
+Epics
+title,description,id,status,subtasksId
+Эпик 1,Описание Эпика 1,2,NEW,[3, 4]
+Subtasks
+title,description,id,status,epicId
+Подзадача 1,Описание подзадачи 1,3,NEW,2
+Подзадача 2,Описание подзадачи 2,4,NEW,2

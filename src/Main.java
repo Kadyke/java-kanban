@@ -42,22 +42,19 @@ public class Main {
         System.out.println(taskManager.getEpic(epic1.getId()));
         System.out.println(taskManager.getAllEpics());
         System.out.println("Получили список всех эпиков");
-        Subtask subtask1 = taskManager.createSubTask("Подзадача 1",
-                "Описание подзадачи 1", epic1);
+        Subtask subtask1 = taskManager.createSubTask("Подзадача 1", "Описание подзадачи 1", epic1);
         System.out.println("Создали подзадачу 1");
         taskManager.subtasks.put(subtask1.getId(), subtask1);
         System.out.println(taskManager.getSubtask(subtask1.getId()));
         System.out.println("Сохранили подзадачу 1");
         System.out.println(taskManager.historyManager.getHistory());
         System.out.println("Получили историю задач");
-        Subtask subtask2 = taskManager.createSubTask("Подзадача 2",
-                "Описание подзадачи 2", epic1);
+        Subtask subtask2 = taskManager.createSubTask("Подзадача 2", "Описание подзадачи 2", epic1);
         System.out.println("Создали подзадачу 2");
         taskManager.subtasks.put(subtask2.getId(), subtask2);
         System.out.println(taskManager.getSubtask(subtask2.getId()));
         System.out.println("Сохранили подзадачу 2");
-        Subtask subtask3 = taskManager.createSubTask("Подзадача 3",
-                "Описание подзадачи 3", epic1);
+        Subtask subtask3 = taskManager.createSubTask("Подзадача 3", "Описание подзадачи 3", epic1);
         System.out.println("Создали подзадачу 3");
         taskManager.subtasks.put(subtask3.getId(), subtask3);
         System.out.println(taskManager.getSubtask(subtask3.getId()));

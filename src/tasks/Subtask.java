@@ -16,9 +16,6 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        String taskString = "";
-        taskString = taskString + title + "\n" + description + "\n" + id + "\n" + status
-                + "\n" + idEpic;
-        return taskString;
+        return title + "\n" + description + "\n" + id + "\n" + status + "\n" + idEpic;
     }
 }

@@ -4,7 +4,6 @@ import tasks.Task;
 import java.util.ArrayList;
 
 public interface HistoryManager {
-    CustomLinkedList history = new CustomLinkedList();
 
     void add(Task task);
 
@@ -12,4 +11,5 @@ public interface HistoryManager {
 
     ArrayList<String> getHistory();
 
+    ArrayList<String> getIdTasks();
 }

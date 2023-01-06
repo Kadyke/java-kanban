@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    Integer id = 0;
+    protected Integer id = 0;
 
     @Override
     public Task createTask(String title, String description) {
@@ -17,6 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
         task.setTitle(title);
         task.setDescription(description);
         task.setStatus(Statuses.NEW);
+        tasks.put(task.getId(), task);
         return task;
     }
 
@@ -70,9 +71,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllTasks() {
         for (Integer id : tasks.keySet()) {
-            TaskManager.historyManager.remove(id);
+            historyManager.remove(id);
         }
-        TaskManager.tasks.clear();
+        tasks.clear();
     }
 
     @Override
@@ -148,6 +149,6 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.setTitle(title);
         subtask.setDescription(description);
         subtask.setStatus(status);
-        TaskManager.epics.get(subtask.getIdEpic()).setStatus();
+        epics.get(subtask.getIdEpic()).setStatus();
     }
 }

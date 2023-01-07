@@ -1,4 +1,4 @@
-package tasks;
+package ru.yandex.practiсum.tasks;
 
 public class Subtask extends Task {
     protected Integer idEpic;

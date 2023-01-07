@@ -1,8 +1,8 @@
-package managers;
+package ru.yandex.practiсum.managers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import tasks.Task;
+import ru.yandex.practiсum.tasks.Task;
 
 public class CustomLinkedList {
     private Node head;

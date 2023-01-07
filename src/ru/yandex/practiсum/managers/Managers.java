@@ -1,4 +1,4 @@
-package managers;
+package ru.yandex.practiсum.managers;
 
 public class Managers {
     public static TaskManager getDefault() {

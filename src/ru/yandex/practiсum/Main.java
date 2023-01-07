@@ -1,5 +1,8 @@
-import tasks.*;
-import managers.*;
+package ru.yandex.practiсum;
+
+import ru.yandex.practiсum.managers.Managers;
+import ru.yandex.practiсum.managers.TaskManager;
+import ru.yandex.practiсum.tasks.*;
 
 public class Main {
 

@@ -1,6 +1,6 @@
-package managers;
+package ru.yandex.practiсum.managers;
 
-import tasks.*;
+import ru.yandex.practiсum.tasks.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,12 +8,23 @@ import java.nio.file.Path;
 import java.io.Writer;
 import java.io.FileWriter;
 
+
+/*
+ Не до конца понял комментарий "Сейчас сохранение истории и задач добавляют данных в файлы и получается,
+ что в файле ненастоящие данные (старые и новые)" Разве суть тз не как раз таки в том, чтобы предыдущие сессии
+ сохранялись в файлах? "Проверьте, что история просмотра восстановилась верно и все задачи, эпики, подзадачи,
+ которые были в старом, есть в новом менеджере."
+*/
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final static String STORAGE = "C:\\Users\\Dmitry\\IdeaProjects\\java-kanban\\src\\storage";
-    private final static Path TASK_MEMORY = Paths.get(STORAGE, "tasksMemory.txt");
-    private final static Path HISTORY_MEMORY = Paths.get(STORAGE, "historyMemory.txt");
+
+    private static final Path TASK_MEMORY = Paths.get("src\\ru\\yandex\\practiсum\\storage\\tasksMemory.txt");
+    private static final Path HISTORY_MEMORY = Paths.get( "src\\ru\\yandex\\practiсum\\storage\\historyMemory.txt");
     public static void main(String[] args) {
+        System.out.println("Тестирование версии 1.3");
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        // Используйте метод purification() для очищения файлов памяти,
+        // если в этом нет необходимости закомменитируйте его.
+        fileBackedTasksManager.purification();
         fileBackedTasksManager.createOrReadFile(fileBackedTasksManager);
         Task task1 = fileBackedTasksManager.createTask("Задача 1", "Описаиние задачи 1");
         System.out.println("Создали задачу 1");
@@ -30,6 +41,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager.getSubtask(subtask1.getId());
         fileBackedTasksManager.getTask(task1.getId());
         fileBackedTasksManager.getSubtask(subtask2.getId());
+        fileBackedTasksManager.updateTask(task1,"Сходить в магазин", "Молоко, Хлеб", Statuses.DONE);
+        System.out.println("Изменили задачу 1");
+        fileBackedTasksManager.deleteEpic(epic1.getId());
+        System.out.println("Удалили эпик 1");
     }
     @Override
     public Task createTask(String title, String description) {
@@ -67,23 +82,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
     @Override
     public Task getTask(Integer id) {
-        TaskManager.historyManager.add(TaskManager.tasks.get(id));
+        historyManager.add(tasks.get(id));
         saveHistory();
-        return TaskManager.tasks.get(id);
+        return tasks.get(id);
     }
 
     @Override
     public Subtask getSubtask(Integer id) {
-        TaskManager.historyManager.add(TaskManager.subtasks.get(id));
+        historyManager.add(subtasks.get(id));
         saveHistory();
-        return TaskManager.subtasks.get(id);
+        return subtasks.get(id);
     }
 
     @Override
     public Epic getEpic(Integer id) {
-        TaskManager.historyManager.add(TaskManager.epics.get(id));
+        historyManager.add(epics.get(id));
         saveHistory();
-        return TaskManager.epics.get(id);
+        return epics.get(id);
     }
 
     @Override
@@ -132,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     @Override
     public void deleteSubtask(Integer id) {
-        Epic epic = epics.get(TaskManager.subtasks.get(id).getIdEpic());
+        Epic epic = epics.get(subtasks.get(id).getIdEpic());
         historyManager.remove(id);
         epic.subtasksId.remove(id);
         subtasks.remove(id);
@@ -168,13 +183,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void createOrReadFile(FileBackedTasksManager fileBackedTasksManager){
         if (Files.exists(TASK_MEMORY)) {
-            System.out.println("TASK_MEMORY уже успешно создан.");
+            System.out.println("TASK_MEMORY уже создан.");
             String file = fileBackedTasksManager.read(TASK_MEMORY);
             if (file != null) {
                 fileBackedTasksManager.writeTasks(file);
             } else {
                 System.out.println("Не удалось прочитать файл");
-                return;
             }
         } else {
             try {
@@ -185,13 +199,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
         }
         if (Files.exists(HISTORY_MEMORY)) {
-            System.out.println("HISTORY_MEMORY уже успешно создан.");
+            System.out.println("HISTORY_MEMORY уже создан.");
             String file = fileBackedTasksManager.read(HISTORY_MEMORY);
             if (file != null) {
                 fileBackedTasksManager.writeHistory(file);
             } else {
                 System.out.println("Не удалось прочитать файл");
-                return;
             }
         } else {
             try {
@@ -204,8 +217,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
     private String read (Path path)  {
         try {
-            String file = Files.readString(Path.of(path.toUri()));
-            return file;
+            return Files.readString(Path.of(path.toUri()));
         } catch (IOException e) {
             System.out.println("ошибочка");
             return null;
@@ -262,15 +274,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void writeHistory (String file) {
         String[] lines = file.split("\n");
-        String[] ids = lines[1].split(",");
-        for (String id : ids) {
-            if (tasks.containsKey(Integer.parseInt(id))) {
-                historyManager.add(tasks.get(Integer.parseInt(id)));
-            } else if (epics.containsKey(Integer.parseInt(id))) {
-                historyManager.add(epics.get(Integer.parseInt(id)));
-            } else {
-                historyManager.add(subtasks.get(Integer.parseInt(id)));
-            }
+        if (lines.length > 1 ) {
+            String[] ids = lines[1].split(",");
+            for (String id : ids) {
+                if (tasks.containsKey(Integer.parseInt(id))) {
+                    historyManager.add(tasks.get(Integer.parseInt(id)));
+                } else if (epics.containsKey(Integer.parseInt(id))) {
+                    historyManager.add(epics.get(Integer.parseInt(id)));
+                } else {
+                    historyManager.add(subtasks.get(Integer.parseInt(id)));
+                }
+        }
         }
     }
 
@@ -314,4 +328,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return taskInString;
     }
 
-}
+    private void purification() {
+        try (Writer fileWriter = new FileWriter(TASK_MEMORY.toFile())) {
+            fileWriter.write("Tasks\ntitle,description,id,status\n");
+            fileWriter.write("Epics\ntitle,description,id,status,subtasksId\n");
+            fileWriter.write("Subtasks\ntitle,description,id,status,epicId\n");
+        } catch (IOException e) {
+            System.out.println("ошибочка");
+        }
+        try (Writer fileWriter = new FileWriter(HISTORY_MEMORY.toFile())) {
+            fileWriter.write("History\n");
+        } catch (IOException e) {
+            System.out.println("ошибочка");
+        }
+    }
+    }
+
+

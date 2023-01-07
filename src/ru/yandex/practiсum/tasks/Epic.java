@@ -1,6 +1,7 @@
-package tasks;
+package ru.yandex.practiсum.tasks;
 
-import managers.InMemoryTaskManager;
+import ru.yandex.practiсum.managers.InMemoryTaskManager;
+
 import java.util.ArrayList;
 import java.util.Objects;
 

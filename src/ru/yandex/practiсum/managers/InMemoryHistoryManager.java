@@ -1,6 +1,6 @@
-package managers;
+package ru.yandex.practiсum.managers;
 
-import tasks.Task;
+import ru.yandex.practiсum.tasks.Task;
 import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {

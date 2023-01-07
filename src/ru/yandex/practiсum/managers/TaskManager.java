@@ -1,9 +1,9 @@
-package managers;
+package ru.yandex.practiсum.managers;
 
-import tasks.Epic;
-import tasks.Statuses;
-import tasks.Subtask;
-import tasks.Task;
+import ru.yandex.practiсum.tasks.Epic;
+import ru.yandex.practiсum.tasks.Statuses;
+import ru.yandex.practiсum.tasks.Subtask;
+import ru.yandex.practiсum.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 

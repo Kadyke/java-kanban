@@ -8,44 +8,52 @@ import java.nio.file.Path;
 import java.io.Writer;
 import java.io.FileWriter;
 
-
 /*
- Не до конца понял комментарий "Сейчас сохранение истории и задач добавляют данных в файлы и получается,
- что в файле ненастоящие данные (старые и новые)" Разве суть тз не как раз таки в том, чтобы предыдущие сессии
- сохранялись в файлах? "Проверьте, что история просмотра восстановилась верно и все задачи, эпики, подзадачи,
- которые были в старом, есть в новом менеджере."
+Я поговорил с наставником, он мне сказал, что реализация, что если майн с кодом создания таски запустить 10 раз,
+то в файле будет 10 однотипных тасок с разными айди, является нормальной. Я изначально именно к такой реализации
+стремился. Во всем остальном все работает. Данные востанавливаются, при вызове методов сохранения данные каждый
+раз перезаписываются. Если нужно начать тестирование с чистыми файлами, передайте флаг true в конструктор класса.
 */
+
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    private static final Path TASK_MEMORY = Paths.get("src\\ru\\yandex\\practiсum\\storage\\tasksMemory.txt");
-    private static final Path HISTORY_MEMORY = Paths.get( "src\\ru\\yandex\\practiсum\\storage\\historyMemory.txt");
+    private final Path TASK_MEMORY = Paths.get("src\\ru\\yandex\\practiсum\\storage\\tasksMemory.txt");
+    private final Path HISTORY_MEMORY = Paths.get( "src\\ru\\yandex\\practiсum\\storage\\historyMemory.txt");
     public static void main(String[] args) {
         System.out.println("Тестирование версии 1.3");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-        // Используйте метод purification() для очищения файлов памяти,
-        // если в этом нет необходимости закомменитируйте его.
-        fileBackedTasksManager.purification();
-        fileBackedTasksManager.createOrReadFile(fileBackedTasksManager);
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(false);
         Task task1 = fileBackedTasksManager.createTask("Задача 1", "Описаиние задачи 1");
-        System.out.println("Создали задачу 1");
+        System.out.println("Создали задачу c id " + task1.getId());
         Epic epic1 = fileBackedTasksManager.createEpic("Эпик 1", "Описание Эпика 1");
-        System.out.println("Создали эпик 1");
+        System.out.println("Создали эпик с id " + epic1.getId());
         Subtask subtask1 = fileBackedTasksManager.createSubTask("Подзадача 1", "Описание подзадачи 1", epic1);
-        System.out.println("Создали подзадачу 1");
+        System.out.println("Создали подзадачу c id " + subtask1.getId());
         Subtask subtask2 = fileBackedTasksManager.createSubTask("Подзадача 2", "Описание подзадачи 2", epic1);
-        System.out.println("Создали подзадачу 2");
-        Task task3 = fileBackedTasksManager.createTask("Задача 2", "Описаиние задачи 2");
-        System.out.println("Создали задачу 2");
+        System.out.println("Создали подзадачу c id " + subtask2.getId());
+        Task task2 = fileBackedTasksManager.createTask("Задача 2", "Описаиние задачи 2");
+        System.out.println("Создали задачу c id " + task2.getId());
         fileBackedTasksManager.getTask(task1.getId());
         fileBackedTasksManager.getEpic(epic1.getId());
         fileBackedTasksManager.getSubtask(subtask1.getId());
         fileBackedTasksManager.getTask(task1.getId());
         fileBackedTasksManager.getSubtask(subtask2.getId());
-        fileBackedTasksManager.updateTask(task1,"Сходить в магазин", "Молоко, Хлеб", Statuses.DONE);
-        System.out.println("Изменили задачу 1");
+        System.out.println(fileBackedTasksManager.historyManager.getHistory());
+        System.out.println("Показали историю задач");
+        fileBackedTasksManager.updateTask(task1,"Сходить в магазин", "Молоко и Хлеб", Statuses.DONE);
+        System.out.println("Изменили задачу c id " + task1.getId());
         fileBackedTasksManager.deleteEpic(epic1.getId());
-        System.out.println("Удалили эпик 1");
+        System.out.println("Удалили эпик c id " + epic1.getId());
+        System.out.println(fileBackedTasksManager.historyManager.getHistory());
+        System.out.println("Показали историю задач");
     }
+    public FileBackedTasksManager (Boolean needForPurification) {
+        // Используйте метод purification() для очищения файлов памяти
+        if (needForPurification) {
+            purification();
+        }
+        createOrReadFile();
+    }
+
     @Override
     public Task createTask(String title, String description) {
         Task task = new Task(++id);
@@ -181,12 +189,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
 
-    private void createOrReadFile(FileBackedTasksManager fileBackedTasksManager){
+    private void createOrReadFile(){
         if (Files.exists(TASK_MEMORY)) {
             System.out.println("TASK_MEMORY уже создан.");
-            String file = fileBackedTasksManager.read(TASK_MEMORY);
+            String file = read(TASK_MEMORY);
             if (file != null) {
-                fileBackedTasksManager.writeTasks(file);
+                writeTasks(file);
             } else {
                 System.out.println("Не удалось прочитать файл");
             }
@@ -200,9 +208,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         if (Files.exists(HISTORY_MEMORY)) {
             System.out.println("HISTORY_MEMORY уже создан.");
-            String file = fileBackedTasksManager.read(HISTORY_MEMORY);
+            String file = read(HISTORY_MEMORY);
             if (file != null) {
-                fileBackedTasksManager.writeHistory(file);
+                writeHistory(file);
             } else {
                 System.out.println("Не удалось прочитать файл");
             }

@@ -1,6 +1,6 @@
 Tasks
 title,description,id,status
-Сходить в магазин,Молоко, Хлеб,1,DONE
+Сходить в магазин,Молоко и Хлеб,1,DONE
 Задача 2,Описаиние задачи 2,5,NEW
 Epics
 title,description,id,status,subtasksId
